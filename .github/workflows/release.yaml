@@ -1,0 +1,30 @@
+# See: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+---
+name: Release
+
+# Trigger on any tag creation:
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build-and-release:
+    name: Build and release
+    uses: asimov-platform/actions/.github/workflows/build-and-release-rust-package.yaml@master
+    permissions:
+      contents: read
+      packages: write
+    secrets: inherit
+    with:
+      create_release: true
+      update_homebrew_tap: true
+      update_scoop_bucket: true
+
+  tweet:
+    uses: asimov-platform/.github/.github/workflows/tweet.yaml@master
+    secrets: inherit
+    with:
+      message: |
+        📦 ASIMOV Snapshot CLI ${{ github.event.release.tag_name }} has been released:
+        ${{ github.event.release.html_url }}
