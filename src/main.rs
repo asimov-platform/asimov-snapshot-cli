@@ -2,6 +2,7 @@
 
 #![deny(unsafe_code)]
 
+use asimov_snapshot_cli::commands;
 use clientele::{
     StandardOptions,
     SysexitsError::{self, *},
@@ -17,11 +18,30 @@ struct Options {
     flags: StandardOptions,
 
     #[clap(subcommand)]
-    command: Option<Command>,
+    command: Command,
 }
 
 #[derive(Debug, Subcommand)]
-enum Command {}
+enum Command {
+    /// Create snapshots for URL(s)
+    #[command(external_subcommand)]
+    Snapshot(Vec<String>),
+
+    /// List snapshots
+    List,
+
+    /// Show log for a URL
+    Log {
+        /// URL to show log for
+        url: String,
+    },
+
+    /// Compact snapshots for a URL
+    Compact {
+        /// URL(s) to compact snapshots for
+        urls: Vec<String>,
+    },
+}
 
 pub fn main() -> SysexitsError {
     // Load environment variables from `.env`:
@@ -50,7 +70,12 @@ pub fn main() -> SysexitsError {
     }
 
     // Execute the given command:
-    let result = match options.command.unwrap() {};
+    let result = match options.command {
+        Command::Snapshot(ref urls) => commands::snapshot(urls, &options.flags),
+        Command::List => commands::list(&options.flags),
+        Command::Log { url } => commands::log(&url, &options.flags),
+        Command::Compact { urls } => commands::compact(&urls, &options.flags),
+    };
 
     match result {
         Ok(()) => EX_OK,
