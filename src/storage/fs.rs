@@ -30,20 +30,20 @@ impl super::Storage for Fs {
         data: impl AsRef<[u8]>,
     ) -> Result<()> {
         let url_hash = hex::encode(sha256(url.as_ref()));
-        let url_path = std::path::Path::new(&url_hash);
+        let url_dir = std::path::Path::new(&url_hash);
 
         tracing::debug!(hash = url_hash, "Creating directory for url");
-        self.root.create_dir_all(url_path)?;
+        self.root.create_dir_all(url_dir)?;
 
         let ts = timestamp.format(TIMESTAMP_FORMAT_STRING);
         let filename = format!("{ts}.jsonld");
 
-        let snapshot_path = url_path.join(filename);
+        let snapshot_path = url_dir.join(filename);
 
         tracing::debug!("Writing snapshot");
         self.root.write(&snapshot_path, data)?;
 
-        let url_link = url_path.join("url");
+        let url_link = url_dir.join("url");
 
         if !self
             .root
@@ -74,9 +74,9 @@ impl super::Storage for Fs {
     #[tracing::instrument(skip(self), fields(url = url.as_ref()))]
     fn set_current_version(&self, url: impl AsRef<str>, timestamp: DateTime<Utc>) -> Result<()> {
         let url_hash = hex::encode(sha256(url.as_ref()));
-        let url_path = std::path::Path::new(&url_hash);
+        let url_dir = std::path::Path::new(&url_hash);
 
-        let current_link_path = url_path.join("current");
+        let current_link_path = url_dir.join("current");
 
         tracing::debug!(source = ?current_link_path, "Removing old `current` symlink");
         self.root.remove_file(&current_link_path).or_else(|e| {
@@ -125,8 +125,6 @@ impl super::Storage for Fs {
 
             let url_link = std::path::Path::new(&url_hash).join("url");
 
-            // let lnk = self.root.read_link(&url_link);
-
             tracing::debug!(hash = ?url_hash, path=?url_link, "Reading url metadata symlink");
             let url = match self.root.read_link(&url_link) {
                 Ok(url) => url,
@@ -147,12 +145,12 @@ impl super::Storage for Fs {
     #[tracing::instrument(skip(self), fields(url = url.as_ref()))]
     fn list_snapshots(&self, url: impl AsRef<str>) -> Result<Vec<DateTime<Utc>>> {
         let url_hash = hex::encode(sha256(url.as_ref()));
-        let url_path = std::path::Path::new(&url_hash);
+        let url_dir = std::path::Path::new(&url_hash);
 
         let mut tss = Vec::new();
 
         tracing::debug!("Reading directory");
-        let read_dir = self.root.read_dir(url_path)?;
+        let read_dir = self.root.read_dir(url_dir)?;
         for entry in read_dir {
             let entry = entry?;
 
@@ -185,15 +183,15 @@ impl super::Storage for Fs {
     #[tracing::instrument(skip(self), fields(url = url.as_ref()))]
     fn delete(&self, url: impl AsRef<str>, timestamp: DateTime<Utc>) -> Result<()> {
         let url_hash = hex::encode(sha256(url.as_ref()));
-        let url_path = std::path::Path::new(&url_hash);
+        let url_dir = std::path::Path::new(&url_hash);
 
         let ts = timestamp.format(TIMESTAMP_FORMAT_STRING);
         let filename = format!("{ts}.jsonld");
 
-        let file_path = url_path.join(filename);
+        let snapshot_path = url_dir.join(filename);
 
-        tracing::debug!(path = ?file_path, "Deleting snapshot");
-        self.root.remove_file(&file_path).or_else(|e| {
+        tracing::debug!(path = ?snapshot_path, "Deleting snapshot");
+        self.root.remove_file(&snapshot_path).or_else(|e| {
             if e.kind() == std::io::ErrorKind::NotFound {
                 Ok(())
             } else {
