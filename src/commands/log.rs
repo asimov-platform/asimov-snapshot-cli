@@ -3,7 +3,7 @@
 use clientele::{StandardOptions, SysexitsError};
 
 pub fn log(url: &str, _flags: &StandardOptions) -> Result<(), SysexitsError> {
-    let ss = crate::Snapshotter::new();
+    let ss = crate::Snapshotter::default();
     let snapshots = ss.log(url)?;
     for snapshot in snapshots {
         println!("{snapshot}");

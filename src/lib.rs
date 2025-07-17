@@ -1,5 +1,6 @@
 // This is free and unencumbered software released into the public domain.
 
+use asimov_env::paths::asimov_root;
 use chrono::{DateTime, prelude::*};
 use std::io::Result;
 
@@ -20,6 +21,15 @@ impl Runner for MockRunner {}
 pub struct Snapshotter<S, R> {
     storage: S,
     runner: R,
+}
+
+impl Default for Snapshotter<crate::storage::fs::Fs, MockRunner> {
+    fn default() -> Self {
+        let snapshot_dir = asimov_root().join("snapshots");
+        let storage = storage::fs::Fs::for_dir(snapshot_dir).unwrap();
+        let runner = MockRunner;
+        Self::new(storage, runner)
+    }
 }
 
 impl<S, R> Snapshotter<S, R> {

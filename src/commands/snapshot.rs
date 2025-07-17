@@ -3,7 +3,7 @@
 use clientele::{StandardOptions, SysexitsError};
 
 pub fn snapshot(urls: &Vec<String>, _flags: &StandardOptions) -> Result<(), SysexitsError> {
-    let ss = crate::Snapshotter::new();
+    let ss = crate::Snapshotter::default();
     for url in urls {
         ss.snapshot(url)?;
     }

@@ -2,8 +2,8 @@
 
 use clientele::{StandardOptions, SysexitsError};
 
-pub fn list(flags: &StandardOptions) -> Result<(), SysexitsError> {
-    let ss = crate::Snapshotter::new();
+pub fn list(_flags: &StandardOptions) -> Result<(), SysexitsError> {
+    let ss = crate::Snapshotter::default();
     let urls = ss.list()?;
     for (url, ts) in urls {
         println!("{url} ({ts}");
