@@ -2,6 +2,10 @@
 
 use clientele::{StandardOptions, SysexitsError};
 
-pub fn compact(urls: &Vec<String>, flags: &StandardOptions) -> Result<(), SysexitsError> {
-    todo!()
+pub fn compact(urls: &Vec<String>, _flags: &StandardOptions) -> Result<(), SysexitsError> {
+    let ss = crate::Snapshotter::new();
+    for url in urls {
+        ss.snapshot(url)?;
+    }
+    Ok(())
 }

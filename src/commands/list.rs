@@ -3,5 +3,10 @@
 use clientele::{StandardOptions, SysexitsError};
 
 pub fn list(flags: &StandardOptions) -> Result<(), SysexitsError> {
-    todo!()
+    let ss = crate::Snapshotter::new();
+    let urls = ss.list()?;
+    for (url, ts) in urls {
+        println!("{url} ({ts}");
+    }
+    Ok(())
 }
