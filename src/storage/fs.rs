@@ -43,7 +43,7 @@ impl super::Storage for Fs {
         tracing::debug!("Writing snapshot");
         self.root.write(&snapshot_path, data)?;
 
-        let url_link = url_dir.join("url");
+        let url_link = url_dir.join(".url");
 
         if !self
             .root
@@ -52,7 +52,7 @@ impl super::Storage for Fs {
             .unwrap_or(false)
         {
             tracing::debug!(source = ?url_link, target = url.as_ref(), "Creating url metadata symlink");
-            self.root.symlink_contents(url.as_ref(), &url_link)?;
+            self.root.write(&url_link, url.as_ref())?;
         }
 
         Ok(())
@@ -123,16 +123,14 @@ impl super::Storage for Fs {
             let entry = entry?;
             let url_hash = entry.file_name();
 
-            let url_link = std::path::Path::new(&url_hash).join("url");
+            let url_link = std::path::Path::new(&url_hash).join(".url");
 
             tracing::debug!(hash = ?url_hash, path=?url_link, "Reading url metadata symlink");
-            let url = match self.root.read_link(&url_link) {
+            let url = match self.root.read_to_string(&url_link) {
                 Ok(url) => url,
                 Err(err) if err.kind() == std::io::ErrorKind::NotFound => continue,
                 Err(err) => return Err(err),
-            }
-            .to_string_lossy()
-            .to_string();
+            };
 
             let current = self.current_version(&url)?;
 
@@ -166,7 +164,7 @@ impl super::Storage for Fs {
             if stem == "current" {
                 continue;
             }
-            if stem == "url" {
+            if stem == ".url" {
                 continue;
             }
 
