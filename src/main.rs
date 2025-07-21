@@ -8,6 +8,7 @@ use clientele::{
     SysexitsError::{self, *},
     crates::clap::{Parser, Subcommand},
 };
+use color_print::ceprintln;
 
 /// ASIMOV Snapshot Command-Line Interface (CLI)
 #[derive(Debug, Parser)]
@@ -67,6 +68,15 @@ pub fn main() -> SysexitsError {
     if options.flags.license {
         print!("{}", include_str!("../UNLICENSE"));
         return EX_OK;
+    }
+
+    if let Err(err) = std::fs::create_dir_all(asimov_env::paths::asimov_root().join("snapshots"))
+        .map_err(|e| {
+            ceprintln!("<s,r>error:</> failed to create snapshot directory: {e}");
+            EX_IOERR
+        })
+    {
+        return err;
     }
 
     // Execute the given command:
