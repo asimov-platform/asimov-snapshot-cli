@@ -56,6 +56,3 @@ lto = "thin"
 [[bin]]
 name = "asimov-snapshot"
 path = "src/main.rs"
-
-[dev-dependencies]
-tempfile = { version = "3.20", default-features = false }

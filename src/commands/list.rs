@@ -2,14 +2,17 @@
 
 use asimov_snapshot::{Snapshotter, storage::Fs};
 use clientele::{StandardOptions, SysexitsError};
-use color_print::cprintln;
+use color_print::{ceprintln, cprintln};
 use jiff::{SpanRound, Timestamp, Unit};
 
 #[tokio::main]
 pub async fn list(_flags: &StandardOptions) -> Result<(), SysexitsError> {
     let ss = Snapshotter::<Fs>::new_fs().expect("Failed to create snapshotter");
     let now = Timestamp::now();
-    let urls = ss.list().await?;
+    let urls = ss
+        .list()
+        .await
+        .inspect_err(|e| ceprintln!("<s,r>error:</> failed to list snapshots: {e}"))?;
     for (url, ts) in urls {
         let diff = now - ts;
 
