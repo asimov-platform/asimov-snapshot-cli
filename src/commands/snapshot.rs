@@ -5,7 +5,7 @@ use clientele::{StandardOptions, SysexitsError};
 use color_print::ceprintln;
 
 #[tokio::main]
-pub async fn snapshot(urls: &Vec<String>, _flags: &StandardOptions) -> Result<(), SysexitsError> {
+pub async fn snapshot(urls: &[String], _flags: &StandardOptions) -> Result<(), SysexitsError> {
     let mut ss = Snapshotter::<Fs>::new_fs()
         .inspect_err(|e| ceprintln!("<s,r>error:</> failed to create snapshotter: {e}"))?;
     for url in urls {
