@@ -6,7 +6,8 @@ use color_print::ceprintln;
 
 #[tokio::main]
 pub async fn compact(urls: &[String], _flags: &StandardOptions) -> Result<(), SysexitsError> {
-    let ss = Snapshotter::<Fs>::new_fs().expect("Failed to create snapshotter");
+    let ss = Snapshotter::<Fs>::new_fs()
+        .inspect_err(|e| ceprintln!("<s,r>error:</> Failed to create snapshotter: {e}"))?;
     for url in urls {
         ss.compact(url).await.inspect_err(|e| {
             ceprintln!("<s,r>error:</> failed to compact snapshots for `{url}`: {e}")

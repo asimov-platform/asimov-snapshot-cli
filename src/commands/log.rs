@@ -7,7 +7,8 @@ use jiff::{SpanRound, Timestamp, Unit};
 
 #[tokio::main]
 pub async fn log(url: &str, _flags: &StandardOptions) -> Result<(), SysexitsError> {
-    let ss = Snapshotter::<Fs>::new_fs().expect("Failed to create snapshotter");
+    let ss = Snapshotter::<Fs>::new_fs()
+        .inspect_err(|e| ceprintln!("<s,r>error:</> Failed to create snapshotter: {e}"))?;
     let snapshots = ss.log(url).await.inspect_err(|e| {
         ceprintln!("<s,r>error:</> failed to fetch snapshot log for `{url}`: {e}")
     })?;

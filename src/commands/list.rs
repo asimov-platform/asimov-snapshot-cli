@@ -7,7 +7,8 @@ use jiff::{SpanRound, Timestamp, Unit};
 
 #[tokio::main]
 pub async fn list(_flags: &StandardOptions) -> Result<(), SysexitsError> {
-    let ss = Snapshotter::<Fs>::new_fs().expect("Failed to create snapshotter");
+    let ss = Snapshotter::<Fs>::new_fs()
+        .inspect_err(|e| ceprintln!("<s,r>error:</> Failed to create snapshotter: {e}"))?;
     let now = Timestamp::now();
     let urls = ss
         .list()
