@@ -76,7 +76,7 @@ mod tests {
 
         let now = jiff::Zoned::now();
 
-        // These is a decent chance that the days>=1 tests are flaky.
+        // There is a decent chance that the days>=1 tests are flaky.
         // Could try adding extra buffer if something starts failing.
         let cases = [
             (3.years(), "3 years ago"),
