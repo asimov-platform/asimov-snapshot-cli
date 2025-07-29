@@ -11,7 +11,7 @@ pub fn format_ts_diff(a: &Zoned, b: &Zoned) -> Result<String, jiff::Error> {
     let years = span.total((Unit::Year, a))?.floor() as i64;
     tracing::trace!(?years);
     if years >= 2 {
-        return Ok(format!("{} years ago", years));
+        return Ok(format!("{years} years ago"));
     }
     if years == 1 {
         return Ok("one year ago".into());
@@ -20,7 +20,7 @@ pub fn format_ts_diff(a: &Zoned, b: &Zoned) -> Result<String, jiff::Error> {
     let months = span.total((Unit::Month, a))?.floor() as i64;
     tracing::trace!(?months);
     if months >= 2 {
-        return Ok(format!("{} months ago", months));
+        return Ok(format!("{months} months ago"));
     }
     if months == 1 {
         return Ok("one month ago".into());
@@ -29,7 +29,7 @@ pub fn format_ts_diff(a: &Zoned, b: &Zoned) -> Result<String, jiff::Error> {
     let weeks = span.total((Unit::Week, a))?.floor() as i64;
     tracing::trace!(?weeks);
     if weeks >= 2 {
-        return Ok(format!("{} weeks ago", weeks));
+        return Ok(format!("{weeks} weeks ago"));
     }
     if weeks == 1 {
         return Ok("one week ago".into());
@@ -38,7 +38,7 @@ pub fn format_ts_diff(a: &Zoned, b: &Zoned) -> Result<String, jiff::Error> {
     let days = span.total((Unit::Day, a))?.floor() as i64;
     tracing::trace!(?days);
     if days >= 2 {
-        return Ok(format!("{} days ago", days));
+        return Ok(format!("{days} days ago"));
     }
     if days == 1 {
         return Ok("one day ago".into());
@@ -47,7 +47,7 @@ pub fn format_ts_diff(a: &Zoned, b: &Zoned) -> Result<String, jiff::Error> {
     let hours = span.total((Unit::Hour, a))?.floor() as i64;
     tracing::trace!(?hours);
     if hours >= 2 {
-        return Ok(format!("{} hours ago", hours));
+        return Ok(format!("{hours} hours ago"));
     }
     if hours == 1 {
         return Ok("one hour ago".into());
@@ -56,7 +56,7 @@ pub fn format_ts_diff(a: &Zoned, b: &Zoned) -> Result<String, jiff::Error> {
     let minutes = span.total((Unit::Minute, a))?.floor() as i64;
     tracing::trace!(?minutes);
     if minutes >= 2 {
-        return Ok(format!("{} minutes ago", minutes));
+        return Ok(format!("{minutes} minutes ago"));
     }
     if minutes == 1 {
         return Ok("one minute ago".into());
