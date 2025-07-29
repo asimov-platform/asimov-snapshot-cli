@@ -17,6 +17,8 @@ pub async fn log(url: &str, _flags: &StandardOptions) -> Result<(), SysexitsErro
     let mut snapshots = ss.log(url).await.inspect_err(|e| {
         ceprintln!("<s,r>error:</> failed to fetch snapshot log for `{url}`: {e}")
     })?;
+    snapshots.sort();
+
     let now = Zoned::now();
     for ts in snapshots {
         let data = ss.read(url, ts).await.inspect_err(|e| {
