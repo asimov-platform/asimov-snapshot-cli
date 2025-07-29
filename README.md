@@ -21,7 +21,7 @@ The intended installation method is through Homebrew.
 #### Installation via Cargo
 
 ```bash
-cargo install asimov-snapshot-cli --version 25.0.0-dev.0
+cargo install asimov-snapshot-cli --version 25.0.0-dev.1
 ```
 
 ## 👉 Examples
