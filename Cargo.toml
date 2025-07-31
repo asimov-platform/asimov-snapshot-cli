@@ -48,6 +48,7 @@ tracing = { version = "0.1", default-features = false }
 tracing-subscriber = { version = "0.3", default-features = false, features = [
     "fmt",
 ] }
+url = { version = "2.5.4", default-features = false }
 
 [profile.release]
 opt-level = "z"
