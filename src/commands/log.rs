@@ -7,7 +7,7 @@ use clientele::{StandardOptions, SysexitsError};
 use color_print::{ceprintln, cprintln};
 use jiff::{Zoned, tz::TimeZone};
 
-use crate::timestamps::format_ts_diff;
+use crate::{timestamps::format_ts_diff, url::normalize_url};
 
 #[tokio::main]
 pub async fn log(url: &str, _flags: &StandardOptions) -> Result<(), SysexitsError> {
@@ -21,8 +21,9 @@ pub async fn log(url: &str, _flags: &StandardOptions) -> Result<(), SysexitsErro
 
     let now = Zoned::now();
     for ts in snapshots {
-        let data = ss.read(url, ts).await.inspect_err(|e| {
-            ceprintln!("<s,r>error:</> failed to read snapshot `{ts}` for url `{url}`: {e}")
+        let url = normalize_url(url);
+        let data = ss.read(&url, ts).await.inspect_err(|e| {
+            ceprintln!("<s,r>error:</> failed to read snapshot `{ts}` for URL `{url}`: {e}")
         })?;
 
         let hash = <sha2::Sha256 as sha2::Digest>::digest(&data);

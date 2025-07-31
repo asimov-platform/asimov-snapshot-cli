@@ -6,13 +6,15 @@ use asimov_snapshot::Snapshotter;
 use clientele::{StandardOptions, SysexitsError};
 use color_print::ceprintln;
 
+use crate::url::normalize_url;
+
 #[tokio::main]
 pub async fn compact(urls: &[String], _flags: &StandardOptions) -> Result<(), SysexitsError> {
     let storage = asimov_snapshot::storage::Fs::for_dir(asimov_root().join("snapshots"))?;
     let ss = Snapshotter::new(Resolver::new(), storage);
 
     let urls: Vec<String> = if !urls.is_empty() {
-        urls.into()
+        urls.into_iter().map(|url| normalize_url(url)).collect()
     } else {
         ss.list()
             .await
