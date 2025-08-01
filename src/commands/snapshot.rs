@@ -10,6 +10,8 @@ use clientele::{
 };
 use color_print::ceprintln;
 
+use crate::url::normalize_url;
+
 #[tokio::main]
 pub async fn snapshot(urls: &[String], _flags: &StandardOptions) -> Result<(), SysexitsError> {
     let storage = asimov_snapshot::storage::Fs::for_dir(asimov_root().join("snapshots"))?;
@@ -25,7 +27,8 @@ pub async fn snapshot(urls: &[String], _flags: &StandardOptions) -> Result<(), S
     let mut ss = Snapshotter::new(resolver, storage);
 
     for url in urls {
-        ss.snapshot(url).await.inspect_err(|e| {
+        let url = normalize_url(url);
+        ss.snapshot(&url).await.inspect_err(|e| {
             ceprintln!("<s,r>error:</> failed to snapshot the resource `{url}`: {e}")
         })?;
     }
