@@ -31,7 +31,7 @@ shadow-rs = { version = "1.0", features = [
 cc = "1.2"
 
 [dependencies]
-asimov-env = "25.0.0-dev.19"
+asimov-env = "25.0.0-dev.20"
 asimov-installer = "25.0.0-dev.19"
 asimov-module = "25.0.0-dev.19"
 asimov-snapshot = "25.0.0-dev.19"
