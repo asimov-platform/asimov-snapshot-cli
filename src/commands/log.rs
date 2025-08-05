@@ -23,11 +23,13 @@ pub async fn log(url: &str, _flags: &StandardOptions) -> Result<(), SysexitsErro
 
     let now = Zoned::now();
     for ts in snapshots {
-        let url = normalize_url(url)
-            .inspect_err(|e| {
-                tracing::error!("proceeding with given unmodified URL, normalization failed: {e}, ")
-            })
-            .unwrap_or_else(|_| url.into());
+        let url = normalize_url(url).unwrap_or_else(|e| {
+            tracing::error!(
+                url,
+                "proceeding with given unmodified URL, normalization failed: {e}"
+            );
+            url.into()
+        });
 
         let snapshot = ss.read(&url, ts).await.inspect_err(|e| {
             tracing::error!("failed to read snapshot `{ts}` for url `{url}`: {e}")

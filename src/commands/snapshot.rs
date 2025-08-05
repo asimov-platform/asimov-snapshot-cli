@@ -12,11 +12,13 @@ pub async fn snapshot(urls: &[String], _flags: &StandardOptions) -> Result<(), S
     let mut ss = Snapshotter::new(Registry::default(), storage, Options::default());
 
     for url in urls {
-        let url = normalize_url(url)
-            .inspect_err(|e| {
-                tracing::error!("proceeding with given unmodified URL, normalization failed: {e}, ")
-            })
-            .unwrap_or_else(|_| url.into());
+        let url = normalize_url(url).unwrap_or_else(|e| {
+            tracing::error!(
+                url,
+                "proceeding with given unmodified URL, normalization failed: {e}"
+            );
+            url.into()
+        });
 
         ss.snapshot(&url)
             .await
