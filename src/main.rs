@@ -19,7 +19,7 @@ struct Options {
     flags: StandardOptions,
 
     #[clap(subcommand)]
-    command: Command,
+    command: Option<Command>,
 }
 
 #[derive(Debug, Subcommand)]
@@ -80,7 +80,7 @@ pub fn main() -> SysexitsError {
     }
 
     // Execute the given command:
-    let result = match options.command {
+    let result = match options.command.unwrap() {
         Command::Snapshot(ref urls) => commands::snapshot(urls, &options.flags),
         Command::List => commands::list(&options.flags),
         Command::Log { url } => commands::log(&url, &options.flags),
