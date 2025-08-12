@@ -6,13 +6,26 @@ use asimov_snapshot::{Options, Snapshotter};
 use clientele::{StandardOptions, SysexitsError};
 use color_print::ceprintln;
 
+use crate::url::normalize_url;
+
 #[tokio::main]
 pub async fn compact(urls: &[String], _flags: &StandardOptions) -> Result<(), SysexitsError> {
     let storage = asimov_snapshot::storage::Fs::for_dir(asimov_root().join("snapshots"))?;
     let ss = Snapshotter::new(Resolver::new(), storage, Options::default());
 
+    let urls: Vec<String> = if !urls.is_empty() {
+        urls.into_iter().map(|url| normalize_url(url)).collect()
+    } else {
+        ss.list()
+            .await
+            .inspect_err(|e| ceprintln!("<s,r>error:</> failed to list URLs: {e}"))?
+            .into_iter()
+            .map(|(url, _)| url)
+            .collect()
+    };
+
     for url in urls {
-        ss.compact(url).await.inspect_err(|e| {
+        ss.compact(&url).await.inspect_err(|e| {
             ceprintln!("<s,r>error:</> failed to compact snapshots for `{url}`: {e}")
         })?;
     }
