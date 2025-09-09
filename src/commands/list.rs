@@ -4,7 +4,7 @@ use asimov_env::paths::asimov_root;
 use asimov_registry::Registry;
 use asimov_snapshot::{Options, Snapshotter};
 use clientele::{StandardOptions, SysexitsError};
-use color_print::{ceprintln, cprintln};
+use color_print::cprintln;
 use jiff::{Zoned, tz::TimeZone};
 
 use crate::timestamps::format_ts_diff;
@@ -18,7 +18,7 @@ pub async fn list(flags: &StandardOptions) -> Result<(), SysexitsError> {
     let urls = ss
         .list()
         .await
-        .inspect_err(|e| ceprintln!("<s,r>error:</> failed to list snapshots: {e}"))?;
+        .inspect_err(|e| tracing::error!("failed to list snapshots: {e}"))?;
     for (url, ts) in urls {
         let diff = format_ts_diff(&now, &ts.to_zoned(TimeZone::UTC))
             .expect("Unexpectedly failed to format timestamp difference");

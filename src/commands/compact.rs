@@ -4,7 +4,6 @@ use asimov_env::paths::asimov_root;
 use asimov_registry::Registry;
 use asimov_snapshot::{Options, Snapshotter};
 use clientele::{StandardOptions, SysexitsError};
-use color_print::ceprintln;
 
 #[tokio::main]
 pub async fn compact(urls: &[String], _flags: &StandardOptions) -> Result<(), SysexitsError> {
@@ -12,9 +11,9 @@ pub async fn compact(urls: &[String], _flags: &StandardOptions) -> Result<(), Sy
     let ss = Snapshotter::new(Registry::default(), storage, Options::default());
 
     for url in urls {
-        ss.compact(url).await.inspect_err(|e| {
-            ceprintln!("<s,r>error:</> failed to compact snapshots for `{url}`: {e}")
-        })?;
+        ss.compact(url)
+            .await
+            .inspect_err(|e| tracing::error!("failed to compact snapshots for `{url}`: {e}"))?;
     }
     Ok(())
 }

@@ -3,11 +3,7 @@
 use asimov_env::paths::asimov_root;
 use asimov_registry::Registry;
 use asimov_snapshot::{Options, Snapshotter};
-use clientele::{
-    StandardOptions,
-    SysexitsError::{self},
-};
-use color_print::ceprintln;
+use clientele::{StandardOptions, SysexitsError};
 
 #[tokio::main]
 pub async fn snapshot(urls: &[String], _flags: &StandardOptions) -> Result<(), SysexitsError> {
@@ -15,9 +11,9 @@ pub async fn snapshot(urls: &[String], _flags: &StandardOptions) -> Result<(), S
     let mut ss = Snapshotter::new(Registry::default(), storage, Options::default());
 
     for url in urls {
-        ss.snapshot(url).await.inspect_err(|e| {
-            ceprintln!("<s,r>error:</> failed to snapshot the resource `{url}`: {e}")
-        })?;
+        ss.snapshot(&url)
+            .await
+            .inspect_err(|e| tracing::error!("failed to snapshot the resource `{url}`: {e}"))?;
     }
     Ok(())
 }
