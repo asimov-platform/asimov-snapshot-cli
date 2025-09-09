@@ -1,6 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 
 use asimov_env::paths::asimov_root;
+use asimov_module::url::normalize_url;
 use asimov_registry::Registry;
 use asimov_snapshot::{Options, Snapshotter};
 use clientele::{StandardOptions, SysexitsError};
@@ -11,6 +12,12 @@ pub async fn snapshot(urls: &[String], _flags: &StandardOptions) -> Result<(), S
     let mut ss = Snapshotter::new(Registry::default(), storage, Options::default());
 
     for url in urls {
+        let url = normalize_url(url)
+            .inspect_err(|e| {
+                tracing::error!("proceeding with given unmodified URL, normalization failed: {e}, ")
+            })
+            .unwrap_or_else(|_| url.into());
+
         ss.snapshot(&url)
             .await
             .inspect_err(|e| tracing::error!("failed to snapshot the resource `{url}`: {e}"))?;
