@@ -35,27 +35,27 @@ cargo install asimov-snapshot-cli --version 25.0.0-dev.2
 
 The binary can be invoked either through [ASIMOV CLI] with `asimov snapshot <cmd>` or directly as `asimov-snapshot <cmd>`.
 
-### Create a snapshot of an URL
+### Create a snapshot of a URL
 
 ```bash
 asimov-snapshot https://getasimov.ai
 ```
 
-### List previously created snapshots
+### List previously saved URLs
 
 ```console
 $ asimov-snapshot list -v
 https://getasimov.ai/ (last updated one minute ago)
 ```
 
-### List snapshot versions of an URL
+### List saved versions of a URL
 
 ```console
 $ asimov-snapshot log https://getasimov.ai
 ed82093b (one minute ago)
 ```
 
-### Compact storage by removing previous generations
+### Compact storage by removing previous versions
 
 ```bash
 asimov-snapshot compact
