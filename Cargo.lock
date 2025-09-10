@@ -236,7 +236,7 @@ dependencies = [
 
 [[package]]
 name = "asimov-snapshot-cli"
-version = "25.0.0-dev.1"
+version = "25.0.0-dev.2"
 dependencies = [
  "asimov-env",
  "asimov-module",

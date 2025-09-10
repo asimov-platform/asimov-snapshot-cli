@@ -28,7 +28,7 @@ brew install asimov-cli # or just asimov-snapshot-cli
 #### Installation via Cargo
 
 ```bash
-cargo install asimov-snapshot-cli --version 25.0.0-dev.1
+cargo install asimov-snapshot-cli --version 25.0.0-dev.2
 ```
 
 ## 👉 Examples
