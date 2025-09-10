@@ -11,13 +11,28 @@ pub async fn compact(urls: &[String], _flags: &StandardOptions) -> Result<(), Sy
     let storage = asimov_snapshot::storage::Fs::for_dir(asimov_root().join("snapshots"))?;
     let ss = Snapshotter::new(Registry::default(), storage, Options::default());
 
-    for url in urls {
-        let url = normalize_url(url)
-            .inspect_err(|e| {
-                tracing::error!("proceeding with given unmodified URL, normalization failed: {e}, ")
+    let urls: Vec<String> = if !urls.is_empty() {
+        urls.iter()
+            .map(|url| {
+                normalize_url(url).unwrap_or_else(|e| {
+                    tracing::error!(
+                        url,
+                        "proceeding with given unmodified URL, normalization failed: {e}"
+                    );
+                    url.clone()
+                })
             })
-            .unwrap_or_else(|_| url.into());
+            .collect()
+    } else {
+        ss.list()
+            .await
+            .inspect_err(|e| tracing::error!("failed to read previously snapshotted URLs: {e}"))?
+            .into_iter()
+            .map(|(url, _)| url)
+            .collect()
+    };
 
+    for url in urls {
         ss.compact(&url)
             .await
             .inspect_err(|e| tracing::error!("failed to compact snapshots for `{url}`: {e}"))?;
