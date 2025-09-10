@@ -18,6 +18,13 @@ The intended installation method is through Homebrew.
 
 ### Installation via Homebrew
 
+Snapshot CLI can be installed along [ASIMOV CLI] through Homebrew:
+
+```bash
+brew tap asimov-platform/tap
+brew install asimov-cli # or just asimov-snapshot-cli
+```
+
 #### Installation via Cargo
 
 ```bash
@@ -25,6 +32,34 @@ cargo install asimov-snapshot-cli --version 25.0.0-dev.1
 ```
 
 ## 👉 Examples
+
+The binary can be invoked either through [ASIMOV CLI] with `asimov snapshot <cmd>` or directly as `asimov-snapshot <cmd>`.
+
+### Create a snapshot of an URL
+
+```bash
+asimov-snapshot https://getasimov.ai
+```
+
+### List previously created snapshots
+
+```console
+$ asimov-snapshot list -v
+https://getasimov.ai/ (last updated one minute ago)
+```
+
+### List snapshot versions of an URL
+
+```console
+$ asimov-snapshot log https://getasimov.ai
+ed82093b (one minute ago)
+```
+
+### Compact storage by removing previous generations
+
+```bash
+asimov-snapshot compact
+```
 
 ## 📚 Reference
 
@@ -43,3 +78,5 @@ git clone https://github.com/asimov-platform/asimov-snapshot-cli.git
 [![Share on Hacker News](https://img.shields.io/badge/share%20on-hn-orange?logo=ycombinator)](https://news.ycombinator.com/submitlink?u=https://github.com/asimov-platform/asimov-snapshot-cli&t=ASIMOV%20Snapshot%20Command-Line%20Interface%20%28CLI%29)
 [![Share on Facebook](https://img.shields.io/badge/share%20on-fb-1976D2?logo=facebook)](https://www.facebook.com/sharer/sharer.php?u=https://github.com/asimov-platform/asimov-snapshot-cli)
 [![Share on LinkedIn](https://img.shields.io/badge/share%20on-linkedin-3949AB?logo=linkedin)](https://www.linkedin.com/sharing/share-offsite/?url=https://github.com/asimov-platform/asimov-snapshot-cli)
+
+[ASIMOV CLI]: https://github.com/asimov-platform/asimov-cli
