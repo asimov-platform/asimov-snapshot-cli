@@ -15,22 +15,22 @@ pub async fn log(url: &str, _flags: &StandardOptions) -> Result<(), SysexitsErro
     let storage = asimov_snapshot::storage::Fs::for_dir(asimov_root().join("snapshots"))?;
     let ss = Snapshotter::new(Registry::default(), storage, Options::default());
 
+    let url = normalize_url(url).unwrap_or_else(|e| {
+        tracing::error!(
+            url,
+            "proceeding with given unmodified URL, normalization failed: {e}"
+        );
+        url.into()
+    });
+
     let mut snapshots = ss
-        .log(url)
+        .log(&url)
         .await
         .inspect_err(|e| tracing::error!("failed to fetch snapshot log for `{url}`: {e}"))?;
     snapshots.sort();
 
     let now = Zoned::now();
     for ts in snapshots {
-        let url = normalize_url(url).unwrap_or_else(|e| {
-            tracing::error!(
-                url,
-                "proceeding with given unmodified URL, normalization failed: {e}"
-            );
-            url.into()
-        });
-
         let snapshot = ss.read(&url, ts).await.inspect_err(|e| {
             tracing::error!("failed to read snapshot `{ts}` for url `{url}`: {e}")
         })?;
