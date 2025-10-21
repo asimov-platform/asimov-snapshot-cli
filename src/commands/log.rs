@@ -1,7 +1,7 @@
 // This is free and unencumbered software released into the public domain.
 
 use asimov_env::paths::asimov_root;
-use asimov_module::url::normalize_url;
+use asimov_module::normalization::normalize_url;
 use asimov_registry::Registry;
 use asimov_snapshot::{Options, Snapshotter};
 use clientele::{StandardOptions, SysexitsError};
