@@ -32,7 +32,7 @@ cc = "1.2"
 
 [dependencies]
 asimov-env = "25.0.0"
-asimov-module = "25.0.0-dev.24"
+asimov-module = "25.0.0"
 asimov-registry = "25.0.0-dev.24"
 asimov-snapshot = "25.0.0-dev.24"
 cap-std = "3.4"
