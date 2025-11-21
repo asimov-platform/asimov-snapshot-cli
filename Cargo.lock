@@ -100,9 +100,9 @@ checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
 name = "asimov-env"
-version = "25.0.0"
+version = "25.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a7c3435e329af7d82158e6243afbe5b418ce4410d8277da3f3a9aa8108f71d5"
+checksum = "59240068f0c558026d60bc1ff0af5d6ad5039f096a0ddd2ac8478b3aa70d0bf5"
 dependencies = [
  "cap-directories",
  "cap-std",
